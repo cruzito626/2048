@@ -1,14 +1,14 @@
 package j2048frontend.gui;
 
 import j2048backend.Tablero;
-import j2048frontend.Cliente;
+import j2048frontend.Cliente2048;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TableroGUI extends JFrame implements Cliente, ActionListener {
+public class TableroGUI extends JFrame implements Cliente2048, ActionListener {
 
     private Tablero tablero;
     private JButton izquierda;
@@ -67,7 +67,7 @@ public class TableroGUI extends JFrame implements Cliente, ActionListener {
     }
 
     @Override
-    public void correr() {
+    public void actualizar() {
         String[][] matriz = formatearTablero();
         tablero.insertarNumeroDos();
         setVisible(true);

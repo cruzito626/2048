@@ -1,12 +1,12 @@
 package j2048frontend.consola;
 
 import j2048backend.Tablero;
-import j2048frontend.Cliente;
+import j2048frontend.Cliente2048;
 
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class TableroConsola implements Cliente {
+public class TableroConsola implements Cliente2048 {
 
     private Scanner teclado;
     private Tablero tablero;
@@ -17,7 +17,7 @@ public class TableroConsola implements Cliente {
         this.teclado = new Scanner(System.in);
     }
 
-    public void correr() {
+    public void actualizar() {
         tablero.insertarNumeroDos();
         System.out.println(formatearTablero());
         switch (tablero.estado()) {

@@ -1,6 +1,6 @@
 package j2048backend;
 
-import j2048frontend.Cliente;
+import j2048frontend.Cliente2048;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,11 +12,11 @@ public class Tablero {
     private final int DOS = 2;
     private final int CERO = 0;
     private int[][] tablero;
-    private List<Cliente> clientes;
+    private List<Cliente2048> cliente2048s;
 
     public Tablero() {
         tablero = new int[TAMANIO][TAMANIO];
-        clientes = new ArrayList<>();
+        cliente2048s = new ArrayList<>();
     }
 
     public boolean insertarNumeroDos() {
@@ -68,12 +68,12 @@ public class Tablero {
                     Estado.CONTINUAR);
     }
 
-    public void agregarCliente(Cliente nuevoCliente) {
-        clientes.add(nuevoCliente);
+    public void agregarCliente(Cliente2048 nuevoCliente2048) {
+        cliente2048s.add(nuevoCliente2048);
     }
 
     private void notificarClientes() {
-        clientes.forEach(cliente -> cliente.correr());
+        cliente2048s.forEach(cliente2048 -> cliente2048.actualizar());
     }
 
     private void mover(Direccion dir) {

@@ -8,7 +8,7 @@ public class Main {
         TableroConsola consola = new TableroConsola(tablero);
         TableroGUI gui = new TableroGUI(tablero);
 
-        gui.correr();
-        consola.correr();
+        gui.actualizar();
+        consola.actualizar();
     }
 }
