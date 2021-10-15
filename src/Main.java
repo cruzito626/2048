@@ -6,9 +6,9 @@ public class Main {
     public static void main(String args[]) {
         Tablero tablero = new Tablero();
         TableroConsola consola = new TableroConsola(tablero);
-        TableroGUI gui = new TableroGUI(tablero);
+        // TableroGUI gui = new TableroGUI(tablero);
 
-        gui.actualizar();
-        consola.actualizar();
+        //gui.correr();
+        consola.correr();
     }
 }

@@ -1,40 +1,80 @@
 package j2048frontend.consola;
 
 import j2048backend.Tablero;
-import j2048frontend.Cliente2048;
 
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
-public class TableroConsola implements Cliente2048 {
+public class TableroConsola {
 
     private Scanner teclado;
     private Tablero tablero;
 
     public TableroConsola(Tablero tablero) {
         this.tablero = tablero;
-        this.tablero.agregarCliente(this);
         this.teclado = new Scanner(System.in);
     }
 
-    public void actualizar() {
+    private void init() {
         tablero.insertarNumeroDos();
-        System.out.println(formatearTablero());
-        switch (tablero.estado()) {
-            case GANADO -> System.out.println("Ganaste!!!");
-            case PERDIDO -> System.out.println("Perdiste!!!");
-            case CONTINUAR -> jugar(leer());
+    }
+
+    public void actualizar() {
+        limpliarConsola();
+        mostrar(formatearTablero());
+    }
+
+
+    public void correr() {
+        boolean ciclo;
+        ciclo = true;
+        init();
+
+        while (ciclo) {
+            actualizar();
+            switch (tablero.estado()) {
+                case GANADO -> {
+                    mostrar("Ganaste!!!");
+                    ciclo = false;
+                }
+                case PERDIDO -> {
+                    mostrar("Perdiste!!!");
+                    ciclo = false;
+                }
+                case CONTINUAR -> jugar(leer());
+            }
         }
     }
 
-    private String leer() {
-        String[] permitidos = {"W", "A", "S", "D"};
-        System.out.print("Ingrese W, A, S, D: ");
-        String entrada = teclado.next().toUpperCase();
-        if (Arrays.stream(permitidos).anyMatch(entrada::equals)) {
-            return entrada;
+    private void mostrar(String str) {
+        if (str == null) {
+            mostrar();
+        } else {
+            System.out.println(str);
         }
-        return leer();
+    }
+
+    private void mostrar() {
+        System.out.println("");
+    }
+
+    private void limpliarConsola() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    private String leer() {
+        String entrada;
+        String[] permitidos;
+
+        permitidos = new String[]{"W", "A", "S", "D"};
+        mostrar("Ingrese W, A, S, D: ");
+        do {
+            entrada = teclado.next().toUpperCase();
+        } while (!Arrays.stream(permitidos).anyMatch(entrada::equals));
+
+        return entrada;
     }
 
     private void jugar(String direccion) {
@@ -46,49 +86,54 @@ public class TableroConsola implements Cliente2048 {
         }
     }
 
-    private StringBuilder formatearTablero() {
+    private String formatearTablero() {
         String[][] tableroMatriz;
         StringBuilder tableroFormatedo;
-        int[] digitosMayores;
+        int tamanioNumeroMasLargo;
 
-        tableroMatriz = transformarAMatriz();
-        digitosMayores = digitosMayores(tableroMatriz);
+        tableroMatriz = transformarAMatriz2D();
+        tamanioNumeroMasLargo = tamanioNumeroMasLargo();
         tableroFormatedo = new StringBuilder();
 
         for (int i = 0; i < tableroMatriz.length; i++) {
             for (int j = 0; j < tableroMatriz[i].length; j++) {
-                int digitosExtras = digitosMayores[j] - tableroMatriz[i][j].length();
+                int digitosExtras = tamanioNumeroMasLargo - tableroMatriz[i][j].length();
 
                 tableroFormatedo.append(" ".repeat(digitosExtras) +
                         tableroMatriz[i][j] +
                         (j < tableroMatriz[i].length - 1 ? " " : "\n"));
             }
         }
-        return tableroFormatedo;
+        return tableroFormatedo.toString();
     }
 
-    private String[][] transformarAMatriz() {
+    private String[][] transformarAMatriz2D() {
         String[][] matriz;
         String[] lineas;
+        int tamanio;
 
         lineas = tablero.toString().split("\\|");
-        matriz = new String[lineas.length][];
-        for (int i = 0; i < lineas.length; i++) {
+        tamanio = lineas.length;
+        matriz = new String[tamanio][tamanio];
+        for (int i = 0; i < tamanio; i++) {
             matriz[i] = lineas[i].split("\\s");
         }
         return matriz;
     }
 
-    private int[] digitosMayores(String[][] numeros) {
-        int mayores[], digitos;
-        mayores = new int[numeros[0].length];
-        for (int i = 0; i < numeros.length; i++) {
-            for (int j = 0; j < numeros[i].length; j++) {
-                digitos = numeros[i][j].length();
-                if (digitos > mayores[j])
-                    mayores[j] = digitos;
-            }
+    private int tamanioNumeroMasLargo() {
+        StringTokenizer numeros;
+        String numero;
+        int tamanioMasLaro, tamanio;
+
+        numeros = new StringTokenizer(tablero.toString(), "\\| | \\s");
+        tamanioMasLaro = 0;
+        while (numeros.hasMoreTokens()) {
+            numero = numeros.nextToken();
+            tamanio = numero.length();
+            if (tamanio > tamanioMasLaro)
+                tamanioMasLaro = tamanio;
         }
-        return mayores;
+        return tamanioMasLaro;
     }
 }
