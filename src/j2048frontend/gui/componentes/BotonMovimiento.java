@@ -1,8 +1,10 @@
-package j2048frontend.gui;
+package j2048frontend.gui.componentes;
 
 import j2048backend.Tablero;
+import j2048frontend.gui.Direccion;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class BotonMovimiento extends JButton {
     private Direccion direccion;
@@ -18,10 +20,11 @@ public class BotonMovimiento extends JButton {
     private void definirIcono() {
         String text;
         text = switch (direccion) {
-            case IZQUIERDA -> "Izq";
-            case ARRIBA -> "Arr";
-            case DERECHA -> "Der";
-            case ABAJO -> "Aba";
+
+            case IZQUIERDA -> "(←)";
+            case ARRIBA -> "(↑)";
+            case DERECHA -> "(→)";
+            case ABAJO -> "(↓)";
         };
         setText(text);
     }

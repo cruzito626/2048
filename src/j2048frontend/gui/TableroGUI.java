@@ -1,26 +1,27 @@
 package j2048frontend.gui;
 
 import j2048backend.Tablero;
+import j2048frontend.gui.componentes.BotonMovimiento;
+import j2048frontend.gui.componentes.Malla;
+import j2048frontend.gui.componentes.Ventana;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class TableroGUI extends JFrame implements ActionListener {
-
-    private Tablero tablero;
-    private JButton izquierda;
-    private JButton derecha;
-    private JButton arriba;
-    private JButton abajo;
+public class TableroGUI extends JFrame {
+  /*  private Tablero tablero;
+    private BotonMovimiento izquierda;
+    private BotonMovimiento derecha;
+    private BotonMovimiento arriba;
+    private BotonMovimiento abajo;
     private JPanel panelPrincipal;
     private JPanel panelTablero;
     private JLabel[][] tableroGUI;
+    private boolean continuar;
 
     public TableroGUI(Tablero tablero) {
         this.tablero = tablero;
-        init();
+        this.continuar = true;
     }
 
     private void init() {
@@ -30,22 +31,24 @@ public class TableroGUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Container contenedor = this.getContentPane();
-        izquierda = new JButton("izq");
-        derecha = new JButton("der");
-        arriba = new JButton("arr");
-        abajo = new JButton("aba");
-
-        izquierda.addActionListener(this);
-        derecha.addActionListener(this);
-        arriba.addActionListener(this);
-        abajo.addActionListener(this);
+        izquierda = new BotonMovimiento(tablero, Direccion.IZQUIERDA);
+        derecha = new BotonMovimiento(tablero, Direccion.DERECHA);
+        arriba = new BotonMovimiento(tablero, Direccion.ARRIBA);
+        abajo = new BotonMovimiento(tablero, Direccion.ABAJO);
 
         panelPrincipal = new JPanel();
         panelPrincipal.setLayout(new BorderLayout());
         panelPrincipal.add(izquierda, BorderLayout.WEST);
         panelPrincipal.add(derecha, BorderLayout.EAST);
         panelPrincipal.add(arriba, BorderLayout.NORTH);
-        panelPrincipal.add(abajo, BorderLayout.SOUTH);
+        // panelPrincipal.add(abajo, BorderLayout.SOUTH);
+
+        JPanel panelBotones = new JPanel();
+        panelBotones.add(izquierda);
+        panelBotones.add(derecha);
+        panelBotones.add(arriba);
+        panelBotones.add(abajo);
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
 
         String[][] matriz = formatearTablero();
         panelTablero = new JPanel();
@@ -62,19 +65,26 @@ public class TableroGUI extends JFrame implements ActionListener {
         }
         panelPrincipal.add(panelTablero, BorderLayout.CENTER);
         contenedor.add(panelPrincipal);
+        setVisible(true);
     }
+
+
 
     public void correr() {
         String[][] matriz = formatearTablero();
         tablero.insertarNumeroDos();
-        setVisible(true);
-        switch (tablero.estado()) {
-            case GANADO -> JOptionPane.showMessageDialog(this, "Ganaste!!!");
-            case PERDIDO -> JOptionPane.showMessageDialog(this, "Perdiste!!!");
-            case CONTINUAR -> {
-                for (int fila = 0; fila < matriz.length; fila++)
-                    for (int columna = 0; columna < matriz[fila].length; columna++)
-                        tableroGUI[fila][columna].setText(matriz[fila][columna]);
+        init();
+        while(continuar) {
+            switch (tablero.estado()) {
+                case GANADO -> {
+                    JOptionPane.showMessageDialog(this, "Ganaste!!!");
+                    continuar = false;
+                }
+                case PERDIDO -> {
+                    JOptionPane.showMessageDialog(this, "Perdiste!!!");
+                    continuar = false;
+                }
+                case CONTINUAR -> actualizar();
             }
         }
     }
@@ -93,18 +103,65 @@ public class TableroGUI extends JFrame implements ActionListener {
         }
         return res;
     }
+*/
+    private final String NOMBRE_VENTANA = "Juego 2048";
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Object botonPulsado = e.getSource();
-        if (botonPulsado == izquierda) {
-            tablero.moverIzquierda();
-        } else if (botonPulsado == derecha) {
-            tablero.moverDerecha();
-        } else if (botonPulsado == arriba) {
-            tablero.moverArriba();
-        } else if (botonPulsado == abajo) {
-            tablero.moverAbajo();
+    private Tablero tablero;
+    private Ventana ventana;
+    private JButton izquierda;
+    private JButton derecha;
+    private JButton arriba;
+    private JButton abajo;
+    private JPanel panelPrincipal;
+    private Malla panelTablero;
+    private boolean continuar;
+
+    public TableroGUI(Tablero tablero) {
+        this.tablero = tablero;
+        this.continuar = true;
+        ventana = new Ventana(NOMBRE_VENTANA);
+    }
+
+    private void init() {
+        ventana.init();
+        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        Container contenedor = ventana.getContentPane();
+
+        panelPrincipal = new JPanel();
+        panelTablero = new Malla(tablero);
+        izquierda = new BotonMovimiento(tablero, Direccion.IZQUIERDA);
+        derecha = new BotonMovimiento(tablero, Direccion.DERECHA);
+        arriba = new BotonMovimiento(tablero, Direccion.ARRIBA);
+        abajo = new BotonMovimiento(tablero, Direccion.ABAJO);
+
+        panelTablero.init();
+        panelPrincipal.setLayout(new BorderLayout());
+        panelPrincipal.add(izquierda, BorderLayout.WEST);
+        panelPrincipal.add(derecha, BorderLayout.EAST);
+        panelPrincipal.add(arriba, BorderLayout.NORTH);
+        panelPrincipal.add(abajo, BorderLayout.SOUTH);
+        panelPrincipal.add(panelTablero, BorderLayout.CENTER);
+
+        contenedor.add(panelPrincipal);
+        ventana.setVisible(true);
+    }
+    public void correr() {
+        tablero.insertarNumeroDos();
+        init();
+        while(continuar) {
+            switch (tablero.estado()) {
+                case GANADO -> {
+                    JOptionPane.showMessageDialog(this, "Ganaste!!!");
+                    continuar = false;
+                }
+                case PERDIDO -> {
+                    JOptionPane.showMessageDialog(this, "Perdiste!!!");
+                    continuar = false;
+                }
+                case CONTINUAR -> panelTablero.actualizar();
+            }
+            panelTablero.actualizar();
         }
     }
 }

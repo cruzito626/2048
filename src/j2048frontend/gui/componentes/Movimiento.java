@@ -1,6 +1,7 @@
-package j2048frontend.gui;
+package j2048frontend.gui.componentes;
 
 import j2048backend.Tablero;
+import j2048frontend.gui.Direccion;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

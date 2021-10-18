@@ -1,6 +1,6 @@
-package j2048frontend.gui.componentes;
+package j2048frontend.gui;
 
-enum Direccion {
+public enum Direccion {
     IZQUIERDA,
     DERECHA,
     ARRIBA,

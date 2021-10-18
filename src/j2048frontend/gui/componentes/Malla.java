@@ -5,35 +5,45 @@ import j2048backend.Tablero;
 import javax.swing.*;
 import java.awt.*;
 
-public class Grilla extends JPanel {
+public class Malla extends JPanel {
     private Tablero tablero;
-    private JLabel[][] panel;
+    private JLabel[][] casillas;
     private String[][] matriz;
 
-    public Grilla(Tablero tablero) {
+    public Malla(Tablero tablero) {
         this.tablero = tablero;
     }
 
     public void init() {
         transformarAMatriz2D();
-        panel = new JLabel[matriz.length][matriz.length];
+        casillas = new JLabel[matriz.length][matriz.length];
+        setLayout(new GridLayout(matriz.length, matriz.length));
         formatearTablero();
-        actualizar();
+        agregarEtiquetas();
     }
+
     public void actualizar() {
         transformarAMatriz2D();
+        formatearTablero();
         for (int fila = 0; fila < matriz.length; fila++)
             for (int columna = 0; columna < matriz[fila].length; columna++)
-                panel[fila][columna].setText(matriz[fila][columna]);
+                casillas[fila][columna].setText(matriz[fila][columna]);
+    }
+
+    private void agregarEtiquetas() {
+        for (int fila = 0; fila < matriz.length; fila++) {
+            for (int columna = 0; columna < matriz[fila].length; columna++) {
+                casillas[fila][columna] = new JLabel(matriz[fila][columna], SwingConstants.CENTER);
+                casillas[fila][columna].setBorder(BorderFactory.createLineBorder(Color.BLUE));
+                add(casillas[fila][columna]);
+            }
+        }
     }
 
     private void formatearTablero() {
-        String casilla = "";
         for (int fila = 0; fila < matriz.length; fila++) {
             for (int columna = 0; columna < matriz[fila].length; columna++) {
-//                casilla = matriz[fila][columna].equals("0") ? "" : matriz[fila][columna];
-                panel[fila][columna] = new JLabel(matriz[fila][columna], SwingConstants.CENTER);
-                panel[fila][columna].setBorder(BorderFactory.createLineBorder(Color.BLUE));
+                matriz[fila][columna] =  matriz[fila][columna].equals("0") ? "" : matriz[fila][columna];
             }
         }
     }

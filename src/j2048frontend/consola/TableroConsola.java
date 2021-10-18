@@ -10,37 +10,36 @@ public class TableroConsola {
 
     private Scanner teclado;
     private Tablero tablero;
+    private boolean continuar;
 
     public TableroConsola(Tablero tablero) {
         this.tablero = tablero;
         this.teclado = new Scanner(System.in);
+        this.continuar = true;
     }
 
     private void init() {
         tablero.insertarNumeroDos();
     }
 
+
     public void actualizar() {
         limpliarConsola();
         mostrar(formatearTablero());
     }
 
-
     public void correr() {
-        boolean ciclo;
-        ciclo = true;
         init();
-
-        while (ciclo) {
+        while (continuar) {
             actualizar();
             switch (tablero.estado()) {
                 case GANADO -> {
                     mostrar("Ganaste!!!");
-                    ciclo = false;
+                    continuar = false;
                 }
                 case PERDIDO -> {
                     mostrar("Perdiste!!!");
-                    ciclo = false;
+                    continuar = false;
                 }
                 case CONTINUAR -> jugar(leer());
             }
