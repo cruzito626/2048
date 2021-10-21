@@ -1,12 +1,15 @@
 package j2048frontend.consola;
 
+import j2048backend.Estado;
 import j2048backend.Tablero;
+import j2048frontend.Observador;
+import j2048frontend.TableroUI;
 
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-public class TableroConsola {
+public class TableroConsola  implements TableroUI, Observador {
 
     private Scanner teclado;
     private Tablero tablero;
@@ -14,35 +17,36 @@ public class TableroConsola {
 
     public TableroConsola(Tablero tablero) {
         this.tablero = tablero;
+        tablero.agregarObservador(this);
         this.teclado = new Scanner(System.in);
         this.continuar = true;
     }
 
-    private void init() {
-        tablero.insertarNumeroDos();
-    }
-
-
-    public void actualizar() {
+    @Override
+    public void actualizar(Estado estado) {
         limpliarConsola();
         mostrar(formatearTablero());
+        switch (estado) {
+            case GANADO -> {
+                mostrar("Ganaste!!!");
+                continuar = false;
+            }
+            case PERDIDO -> {
+                mostrar("Perdiste!!!");
+                continuar = false;
+            }
+            case CONTINUAR -> mostrar("Ingrese W, A, S, D: ");
+        }
     }
 
+    @Override
     public void correr() {
-        init();
+        String moverA;
         while (continuar) {
-            actualizar();
-            switch (tablero.estado()) {
-                case GANADO -> {
-                    mostrar("Ganaste!!!");
-                    continuar = false;
-                }
-                case PERDIDO -> {
-                    mostrar("Perdiste!!!");
-                    continuar = false;
-                }
-                case CONTINUAR -> jugar(leer());
-            }
+            Estado estado = tablero.estado();
+            actualizar(estado);
+            moverA = leerComando();
+            jugar(moverA);
         }
     }
 
@@ -63,12 +67,11 @@ public class TableroConsola {
         System.out.flush();
     }
 
-    private String leer() {
+    private String leerComando() {
         String entrada;
         String[] permitidos;
 
         permitidos = new String[]{"W", "A", "S", "D"};
-        mostrar("Ingrese W, A, S, D: ");
         do {
             entrada = teclado.next().toUpperCase();
         } while (!Arrays.stream(permitidos).anyMatch(entrada::equals));

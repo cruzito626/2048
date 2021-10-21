@@ -1,6 +1,10 @@
 package j2048backend;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import j2048frontend.Observador;
 
 public class Tablero {
     private final int LIMITE = 16;
@@ -8,9 +12,11 @@ public class Tablero {
     private final int DOS = 2;
     private final int CERO = 0;
     private int[][] tablero;
+    private List<Observador> observadores;
 
     public Tablero() {
         tablero = new int[TAMANIO][TAMANIO];
+        observadores = new ArrayList<>();
     }
 
     public boolean insertarNumeroDos() {
@@ -62,6 +68,15 @@ public class Tablero {
                     Estado.CONTINUAR);
     }
 
+    public void agregarObservador(Observador observador) {
+        observadores.add(observador);
+    }
+
+    public void notificar() {
+        Estado estado = estado();
+        observadores.forEach(observador -> observador.actualizar(estado));
+    }
+
     private void mover(Direccion dir) {
         int sentido;
         int[] temp, compreso;
@@ -88,6 +103,7 @@ public class Tablero {
 
         if (movido) {
             insertarNumeroDos();
+            notificar();
         }
     }
 
@@ -146,7 +162,7 @@ public class Tablero {
         return false;
     }
 
-    public int[] comprimir(int[] arr, int sentido) {
+    private int[] comprimir(int[] arr, int sentido) {
         int inicio, pos;
         int[] temp;
 

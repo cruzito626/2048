@@ -2,9 +2,9 @@ package j2048frontend.gui.componentes;
 
 import j2048backend.Tablero;
 import j2048frontend.gui.Direccion;
+import j2048frontend.gui.eventos.MovimientoEvento;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class BotonMovimiento extends JButton {
     private Direccion direccion;
@@ -13,7 +13,7 @@ public class BotonMovimiento extends JButton {
     public BotonMovimiento(Tablero tablero, Direccion direccion) {
         this.tablero = tablero;
         this.direccion = direccion;
-        addActionListener(new Movimiento(tablero, direccion));
+        addActionListener(new MovimientoEvento(tablero, direccion));
         definirIcono();
     }
 
