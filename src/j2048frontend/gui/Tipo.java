@@ -1,8 +1,9 @@
 package j2048frontend.gui;
 
-public enum Direccion {
+public enum Tipo {
     IZQUIERDA,
     DERECHA,
     ARRIBA,
-    ABAJO;
+    ABAJO,
+    TERMINAR;
 }
