@@ -5,142 +5,117 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class TableroTest {
-    private static Tablero tablero;
+    private Tablero tablero;
+    private String[][] tableroCadena;
+    final String CERO = "0";
 
     @BeforeEach
     public void init() {
-        tablero = new Tablero();
+        tablero = Tablero.crear2048();
+    }
+
+
+    @Test
+    public void pruebaCrearTableroNuevo() {
+        transformarAMatriz2D();
+        int ceros = contarCeros();
+
+        Assertions.assertTrue(ceros == 15);
     }
 
     @Test
-    public void pruebaInsertarNumeroDosEnTableroVacio() {
-        Assertions.assertTrue(tablero.insertarNumeroDos());
-    }
-
-    @Test
-    public void pruebaInsertarNumeroDosEnTableroMarcado() {
-        tablero.insertarNumeroDos();
-        Assertions.assertTrue(tablero.insertarNumeroDos());
-    }
-
-    @Test
-    public void pruebaInsertarNumeroDosEnTableroLleno() {
-        llenarTablero(tablero);
-        Assertions.assertFalse(tablero.insertarNumeroDos());
-    }
-
-    @Test
-    public void pruebaMoverIzquierdaEnTableroVacio() {
-        tablero.moverIzquierda();
-        Assertions.assertEquals("0 0 0 0|0 0 0 0|0 0 0 0|0 0 0 0", tablero.toString());
-    }
-
-    @Test
-    public void pruebaMoverIzquierdaEnTableroRotandoMaximoVeces() {
-        mover(tablero, Direccion.IZQUIERDA, 8);
-        llenarTablero(tablero);
-        Assertions.assertEquals(tablero.toString(), "16 8 4 2|16 8 4 2|16 8 4 2|16 8 4 2");
-    }
-
-    @Test
-    public void pruebaMoverIzquierdaEnTableroRotandoMayorAMaximoVeces() {
-        mover(tablero, Direccion.IZQUIERDA, 8);
-        llenarTablero(tablero);
-        tablero.moverIzquierda();
-        Assertions.assertEquals(tablero.toString(), "16 8 4 2|16 8 4 2|16 8 4 2|16 8 4 2");
-    }
-
-    @Test
-    public void pruebaMoverDerechaEnTableroVacio() {
+    public void pruebaMoverIzquierdaEnTableroNuevo() {
         tablero.moverDerecha();
-        Assertions.assertEquals("0 0 0 0|0 0 0 0|0 0 0 0|0 0 0 0", tablero.toString());
+        tablero.moverIzquierda();
+        transformarAMatriz2D();
+        int ceros = contarCeros();
+
+        Assertions.assertTrue(ceros == 13 || ceros == 14);
     }
 
     @Test
-    public void pruebaMoverDerechaEnTableroRotandoMaximoVeces() {
-        mover(tablero, Direccion.DERECHA, 8);
-        llenarTablero(tablero);
-        Assertions.assertEquals(tablero.toString(), "2 4 8 16|2 4 8 16|2 4 8 16|2 4 8 16");
-    }
-
-    @Test
-    public void pruebaMoverDerechaEnTableroRotandoMayorAMaximoVeces() {
-        mover(tablero, Direccion.DERECHA, 8);
-        llenarTablero(tablero);
+    public void pruebaMoverDerechaEnTableroNuevo() {
+        tablero.moverIzquierda();
         tablero.moverDerecha();
-        Assertions.assertEquals(tablero.toString(), "2 4 8 16|2 4 8 16|2 4 8 16|2 4 8 16");
+        transformarAMatriz2D();
+        int ceros = contarCeros();
+
+        Assertions.assertTrue(ceros == 13 || ceros == 14);
     }
 
     @Test
-    public void pruebaMoverArribaEnTableroVacio() {
+    public void pruebaMoverArribaEnTableroNuevo() {
         tablero.moverAbajo();
-        Assertions.assertEquals("0 0 0 0|0 0 0 0|0 0 0 0|0 0 0 0", tablero.toString());
-    }
-
-    @Test
-    public void pruebaMoverArribaEnTableroRotandoMaximoVeces() {
-        mover(tablero, Direccion.ARRIBA, 8);
-        llenarTablero(tablero);
-        Assertions.assertEquals(tablero.toString(), "16 16 16 16|8 8 8 8|4 4 4 4|2 2 2 2");
-    }
-
-    @Test
-    public void pruebaMoverArribaEnTableroRotandoMayorAMaximoVeces() {
-        mover(tablero, Direccion.ARRIBA, 8);
-        llenarTablero(tablero);
         tablero.moverArriba();
-        Assertions.assertEquals(tablero.toString(), "16 16 16 16|8 8 8 8|4 4 4 4|2 2 2 2");
+        transformarAMatriz2D();
+        int ceros = contarCeros();
+
+        Assertions.assertTrue(ceros == 13 || ceros == 14);
     }
 
     @Test
-    public void pruebaMoverAbajoEnTableroVacio() {
+    public void pruebaMoverAbajoEnTableroNuevo() {
         tablero.moverArriba();
-        Assertions.assertEquals("0 0 0 0|0 0 0 0|0 0 0 0|0 0 0 0", tablero.toString());
-    }
-
-    @Test
-    public void pruebaMoverAbajoEnTableroRotandoMaximoVeces() {
-        mover(tablero, Direccion.ABAJO, 8);
-        llenarTablero(tablero);
-        Assertions.assertEquals(tablero.toString(), "2 2 2 2|4 4 4 4|8 8 8 8|16 16 16 16");
-    }
-
-    @Test
-    public void pruebaMoverAbaJOEnTableroRotandoMayorAMaximoVeces() {
-        mover(tablero, Direccion.ABAJO, 8);
-        llenarTablero(tablero);
         tablero.moverAbajo();
-        Assertions.assertEquals(tablero.toString(), "2 2 2 2|4 4 4 4|8 8 8 8|16 16 16 16");
+        transformarAMatriz2D();
+        int ceros = contarCeros();
+
+        Assertions.assertTrue(ceros == 13 || ceros == 14);
     }
 
     @Test
-    public void pruebaToStringEnTableroVacio() {
-        Assertions.assertEquals("0 0 0 0|0 0 0 0|0 0 0 0|0 0 0 0", tablero.toString());
+    public void pruebaEstadoEnTableroNuevo() {
+        tablero.moverDerecha();
+        tablero.moverIzquierda();
+        tablero.moverArriba();
+        tablero.moverAbajo();
+        Assertions.assertEquals(Estado.CONTINUAR, tablero.estado());
     }
 
     @Test
-    public void pruebaToStringEnTableroLleno() {
-        llenarTablero(tablero);
-        Assertions.assertEquals("2 2 2 2|2 2 2 2|2 2 2 2|2 2 2 2", tablero.toString());
+    public void pruebaEstadoEnTableroTerminado() {
+        String tableroAnterior = tablero.toString();
+        String tableroActual;
+        while (true) {
+            tablero.moverDerecha();
+            tablero.moverIzquierda();
+            tablero.moverArriba();
+            tablero.moverAbajo();
+            tableroActual = tablero.toString();
+            if (tableroAnterior.equals(tableroActual)) {
+                break;
+            }
+            tableroAnterior = tableroActual;
+        }
+
+        boolean terminado = Estado.GANADO == tablero.estado() || Estado.PERDIDO == tablero.estado();
+        Assertions.assertTrue(terminado);
     }
 
+    private int contarCeros() {
+        int contador = 0;
 
-    private void llenarTablero(Tablero tablero) {
-        boolean insertado;
-        do {
-            insertado = tablero.insertarNumeroDos();
-        } while (insertado);
-    }
-
-    private void mover(Tablero tablero, Direccion dir, int veces) {
-        for (int i = 0; i < veces; i++) {
-            llenarTablero(tablero);
-            switch (dir) {
-                case IZQUIERDA -> tablero.moverIzquierda();
-                case DERECHA -> tablero.moverDerecha();
-                case ARRIBA -> tablero.moverArriba();
-                case ABAJO-> tablero.moverAbajo();
+        for (int fila = 0; fila < tableroCadena.length; fila++) {
+            for (int columna = 0; columna < tableroCadena[fila].length; columna++) {
+                if (CERO.equals(tableroCadena[fila][columna])) {
+                    contador++;
+                }
             }
         }
+        return contador;
+    }
+
+    private void transformarAMatriz2D() {
+        String[][] matriz;
+        String[] lineas;
+        int tamanio;
+
+        lineas = tablero.toString().split("\\|");
+        tamanio = lineas.length;
+        matriz = new String[tamanio][tamanio];
+        for (int i = 0; i < tamanio; i++) {
+            matriz[i] = lineas[i].split("\\s");
+        }
+        tableroCadena = matriz;
     }
 }

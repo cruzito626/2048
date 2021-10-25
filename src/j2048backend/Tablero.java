@@ -7,19 +7,21 @@ import java.util.List;
 import j2048frontend.Observador;
 
 public class Tablero {
-    private final int LIMITE = 16;
-    private final int TAMANIO = 4;
-    private final int DOS = 2;
-    private final int CERO = 0;
+    private final static int LIMITE = 16;
+    private final static int TAMANIO = 4;
+    private final static int DOS = 2;
+    private final static int CERO = 0;
     private int[][] tablero;
     private List<Observador> observadores;
+    private Estado estado;
 
-    public Tablero() {
+    private Tablero() {
         tablero = new int[TAMANIO][TAMANIO];
         observadores = new ArrayList<>();
+        estado = Estado.CONTINUAR;
     }
 
-    public boolean insertarNumeroDos() {
+    private boolean insertarNumeroDos() {
         if (!estaLleno()) {
             int fila, columna;
             do {
@@ -61,11 +63,12 @@ public class Tablero {
     }
 
     public Estado estado() {
-        return alcanceLimite() ?
-                Estado.GANADO :
-                (!sePuedeMover() ?
-                    Estado.PERDIDO :
-                    Estado.CONTINUAR);
+        if (alcanceLimite()) {
+            estado =  Estado.GANADO;
+        } else if (!sePuedeMover()) {
+            return Estado.PERDIDO;
+        }
+        return estado;
     }
 
     public void agregarObservador(Observador observador) {
@@ -75,6 +78,12 @@ public class Tablero {
     public void notificar() {
         Estado estado = estado();
         observadores.forEach(observador -> observador.actualizar(estado));
+    }
+
+    public static Tablero crear2048() {
+        Tablero j2048 = new Tablero();
+        j2048.insertarNumeroDos();
+        return j2048;
     }
 
     private void mover(Direccion dir) {

@@ -27,7 +27,6 @@ public class BotonEvento implements ActionListener {
             case ARRIBA -> tablero.moverArriba();
             case DERECHA -> tablero.moverDerecha();
             case ABAJO -> tablero.moverAbajo();
-            case TERMINAR -> System.exit(0);
         }
     }
 }
