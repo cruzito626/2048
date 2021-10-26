@@ -1,21 +1,22 @@
 package j2048frontend.gui.componentes;
 
 import j2048backend.Tablero;
+import j2048frontend.Helper;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class Malla extends JPanel {
+public class TableroGraficoGUI extends JPanel {
     private Tablero tablero;
     private JLabel[][] casillas;
     private String[][] matriz;
 
-    public Malla(Tablero tablero) {
+    public TableroGraficoGUI(Tablero tablero) {
         this.tablero = tablero;
     }
 
     public void init() {
-        transformarAMatriz2D();
+        matriz = Helper.strAMatriz2D(tablero.toString(), "\\|", "\\s");
         casillas = new JLabel[matriz.length][matriz.length];
         setLayout(new GridLayout(matriz.length, matriz.length));
         formatearTablero();
@@ -23,7 +24,7 @@ public class Malla extends JPanel {
     }
 
     public void actualizar() {
-        transformarAMatriz2D();
+        matriz = Helper.strAMatriz2D(tablero.toString(), "\\|", "\\s");
         formatearTablero();
         for (int fila = 0; fila < matriz.length; fila++)
             for (int columna = 0; columna < matriz[fila].length; columna++)
@@ -48,16 +49,4 @@ public class Malla extends JPanel {
         }
     }
 
-    private String[][] transformarAMatriz2D() {
-        String[] lineas;
-        int tamanio;
-
-        lineas = tablero.toString().split("\\|");
-        tamanio = lineas.length;
-        matriz = new String[tamanio][tamanio];
-        for (int i = 0; i < tamanio; i++) {
-            matriz[i] = lineas[i].split("\\s");
-        }
-        return matriz;
-    }
 }

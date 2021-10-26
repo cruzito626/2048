@@ -4,8 +4,10 @@ import j2048backend.Estado;
 import j2048backend.Tablero;
 import j2048frontend.Observador;
 import j2048frontend.TableroUI;
+import j2048frontend.Helper;
 
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -27,12 +29,8 @@ public class TableroConsola  implements TableroUI, Observador {
         limpliarConsola();
         mostrar(formatearTablero());
         switch (estado) {
-            case GANADO -> {
-                mostrar("Ganaste!!!");
-                continuar = false;
-            }
-            case PERDIDO -> {
-                mostrar("Perdiste!!!");
+            case GANADO, PERDIDO -> {
+                mostrar(estado.name());
                 continuar = false;
             }
             case CONTINUAR -> mostrar("Ingrese W, A, S, D: ");
@@ -71,9 +69,14 @@ public class TableroConsola  implements TableroUI, Observador {
         String entrada;
         String[] permitidos;
 
+        entrada = "";
         permitidos = new String[]{"W", "A", "S", "D"};
         do {
-            entrada = teclado.next().toUpperCase();
+            try {
+                entrada = teclado.next().toUpperCase();
+            } catch (InputMismatchException ime) {
+                break;
+            }
         } while (!Arrays.stream(permitidos).anyMatch(entrada::equals));
 
         return entrada;
@@ -89,38 +92,24 @@ public class TableroConsola  implements TableroUI, Observador {
     }
 
     private String formatearTablero() {
-        String[][] tableroMatriz;
+        String[][] matriz;
         StringBuilder tableroFormatedo;
         int tamanioNumeroMasLargo;
 
-        tableroMatriz = transformarAMatriz2D();
+        matriz = Helper.strAMatriz2D(tablero.toString(), "\\|", "\\s");
         tamanioNumeroMasLargo = tamanioNumeroMasLargo();
         tableroFormatedo = new StringBuilder();
 
-        for (int i = 0; i < tableroMatriz.length; i++) {
-            for (int j = 0; j < tableroMatriz[i].length; j++) {
-                int digitosExtras = tamanioNumeroMasLargo - tableroMatriz[i][j].length();
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                int digitosExtras = tamanioNumeroMasLargo - matriz[i][j].length();
 
                 tableroFormatedo.append(" ".repeat(digitosExtras) +
-                        tableroMatriz[i][j] +
-                        (j < tableroMatriz[i].length - 1 ? " " : "\n"));
+                        matriz[i][j] +
+                        (j < matriz[i].length - 1 ? " " : "\n"));
             }
         }
         return tableroFormatedo.toString();
-    }
-
-    private String[][] transformarAMatriz2D() {
-        String[][] matriz;
-        String[] lineas;
-        int tamanio;
-
-        lineas = tablero.toString().split("\\|");
-        tamanio = lineas.length;
-        matriz = new String[tamanio][tamanio];
-        for (int i = 0; i < tamanio; i++) {
-            matriz[i] = lineas[i].split("\\s");
-        }
-        return matriz;
     }
 
     private int tamanioNumeroMasLargo() {

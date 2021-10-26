@@ -5,7 +5,7 @@ import j2048backend.Tablero;
 import j2048frontend.Observador;
 import j2048frontend.TableroUI;
 import j2048frontend.gui.componentes.Boton;
-import j2048frontend.gui.componentes.Malla;
+import j2048frontend.gui.componentes.TableroGraficoGUI;
 import j2048frontend.gui.componentes.Ventana;
 import j2048frontend.gui.eventos.BotonEvento;
 
@@ -28,7 +28,7 @@ public class TableroGUI extends JFrame implements TableroUI, Observador {
     private JPanel panelDerecha;
     private JPanel panelArriba;
     private JPanel panelAbajo;
-    private Malla panelTablero;
+    private TableroGraficoGUI panelTablero;
     private JLabel etiquetaMensaje;
 
     public TableroGUI(Tablero tablero) {
@@ -81,7 +81,7 @@ public class TableroGUI extends JFrame implements TableroUI, Observador {
     }
 
     private void definirTablero() {
-        panelTablero = new Malla(tablero);
+        panelTablero = new TableroGraficoGUI(tablero);
         panelTablero.init();
     }
 

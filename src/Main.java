@@ -6,9 +6,9 @@ public class Main {
     public static void main(String args[]) {
         Tablero tablero = Tablero.crear2048();
         TableroConsola consola = new TableroConsola(tablero);
-        TableroGUI gui = new TableroGUI(tablero);
+       TableroGUI gui = new TableroGUI(tablero);
 
-        gui.correr();
+       gui.correr();
         consola.correr();
     }
 }
